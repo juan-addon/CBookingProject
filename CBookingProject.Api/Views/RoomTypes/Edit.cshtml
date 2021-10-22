@@ -1,0 +1,47 @@
+﻿@model CBookingProject.API.Models.RoomTypeViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>RoomType</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="RoomDescription" class="control-label"></label>
+                <input asp-for="RoomDescription" class="form-control" />
+                <span asp-validation-for="RoomDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="HotelId" class="control-label"></label>
+                <select asp-for="HotelId" asp-items="Model.Hotels" class="form-control"></select>
+                <span asp-validation-for="HotelId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="Status" type="checkbox" class="form-check-input" />
+                    <label asp-for="Status" class="form-check-label"></label>
+                </div>
+                <span asp-validation-for="Status" class="text-warning"></span>
+            </div>
+
+            
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

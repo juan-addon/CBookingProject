@@ -1,0 +1,96 @@
+﻿@model IEnumerable<CBookingProject.API.Data.Entities.Hotel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Hotels</h3>
+            </div>
+
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="HotelTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.HotelName)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Address)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.City)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HotelName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Address)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.HotelId">Edit</a> |
+                                <button data-id="@item.HotelId" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_DeleteDialog" />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="/js/deleteDialog.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            sc_deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Hotels/Delete/', false);
+        });
+    </script>
+}
