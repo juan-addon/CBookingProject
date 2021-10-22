@@ -33,7 +33,5 @@ namespace CBookingProject.API.Data.Entities
         [DefaultValue(true)]
         public bool Status { get; set; }
         public ICollection<RoomType> RoomTypes { get; set; }
-
-        
     }
 }

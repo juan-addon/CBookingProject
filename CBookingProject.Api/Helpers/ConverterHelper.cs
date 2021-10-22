@@ -1,10 +1,6 @@
 ﻿using CBookingProject.API.Data;
 using CBookingProject.API.Data.Entities;
 using CBookingProject.API.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CBookingProject.API.Helpers
 {
@@ -43,6 +39,32 @@ namespace CBookingProject.API.Helpers
                 RoomDescription = room.RoomDescription,
                 RoomTypeId = room.RoomTypeId,
                 Status = room.Status
+            };
+        }
+
+        public RoomAvailabilityViewModel ToRoomAvailabilityViewModel(RoomAvailability availability)
+        {
+            return new RoomAvailabilityViewModel
+            {
+                RoomTypes = _combosHelper.GetRoomTypes(),
+                DateFrom = availability.DateFrom,
+                DateTo = availability.DateTo,
+                AvailabilityDescription = availability.AvailabilityDescription,
+                AvailabilityId = availability.AvailabilityId,
+                RoomTypeId = availability.RoomTypeId,
+                Status = availability.Status
+            };
+        }
+
+        public RoomPriceViewModel ToRoomPriceViewModel(RoomPrice price)
+        {
+            return new RoomPriceViewModel
+            {
+                RoomAvailabilities = _combosHelper.GetAvailabilitiesList(),
+                UnitPrice = price.UnitPrice,
+                RoomAvailabilityId = price.RoomAvailabilityId,
+                RoomPriceId = price.RoomPriceId,
+                Status = price.Status
             };
         }
 

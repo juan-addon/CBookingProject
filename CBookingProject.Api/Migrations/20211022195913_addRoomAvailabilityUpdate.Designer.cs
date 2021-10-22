@@ -4,131 +4,22 @@ using CBookingProject.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CBookingProject.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211022195913_addRoomAvailabilityUpdate")]
+    partial class addRoomAvailabilityUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CBookingProject.API.Data.Entities.Booking", b =>
-                {
-                    b.Property<int>("BookingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BookingStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateTo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GuestId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("BookingId");
-
-                    b.HasIndex("BookingStatusId");
-
-                    b.HasIndex("GuestId");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("CBookingProject.API.Data.Entities.BookingStatus", b =>
-                {
-                    b.Property<int>("BookingStatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("StatusCode")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("StatusDescription")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("BookingStatusId");
-
-                    b.HasIndex("StatusCode")
-                        .IsUnique();
-
-                    b.HasIndex("StatusDescription")
-                        .IsUnique();
-
-                    b.ToTable("BookingStatuses");
-                });
-
-            modelBuilder.Entity("CBookingProject.API.Data.Entities.Guest", b =>
-                {
-                    b.Property<int>("GuestNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("GuestDateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GuestEmail")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
-
-                    b.Property<string>("GuestLastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("GuestName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("GuestStatus")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Identification")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("GuestNumber");
-
-                    b.HasIndex("GuestEmail")
-                        .IsUnique();
-
-                    b.HasIndex("Identification")
-                        .IsUnique();
-
-                    b.ToTable("Guests");
-                });
 
             modelBuilder.Entity("CBookingProject.API.Data.Entities.Hotel", b =>
                 {
@@ -301,33 +192,6 @@ namespace CBookingProject.API.Migrations
                     b.ToTable("RoomTypes");
                 });
 
-            modelBuilder.Entity("CBookingProject.API.Data.Entities.Booking", b =>
-                {
-                    b.HasOne("CBookingProject.API.Data.Entities.BookingStatus", "BookingStatus")
-                        .WithMany("Bookings")
-                        .HasForeignKey("BookingStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CBookingProject.API.Data.Entities.Guest", "Guests")
-                        .WithMany("Bookings")
-                        .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CBookingProject.API.Data.Entities.Room", "Rooms")
-                        .WithMany("Bookings")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BookingStatus");
-
-                    b.Navigation("Guests");
-
-                    b.Navigation("Rooms");
-                });
-
             modelBuilder.Entity("CBookingProject.API.Data.Entities.Room", b =>
                 {
                     b.HasOne("CBookingProject.API.Data.Entities.RoomType", "RoomType")
@@ -372,24 +236,9 @@ namespace CBookingProject.API.Migrations
                     b.Navigation("Hotel");
                 });
 
-            modelBuilder.Entity("CBookingProject.API.Data.Entities.BookingStatus", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("CBookingProject.API.Data.Entities.Guest", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
             modelBuilder.Entity("CBookingProject.API.Data.Entities.Hotel", b =>
                 {
                     b.Navigation("RoomTypes");
-                });
-
-            modelBuilder.Entity("CBookingProject.API.Data.Entities.Room", b =>
-                {
-                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("CBookingProject.API.Data.Entities.RoomAvailability", b =>

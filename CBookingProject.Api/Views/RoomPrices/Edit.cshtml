@@ -1,4 +1,4 @@
-﻿@model CBookingProject.API.Data.Entities.Hotel
+﻿@model CBookingProject.API.Models.RoomPriceViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,15 +6,14 @@
 
 <h1>Edit</h1>
 
-<h4>RoomType</h4>
+<h4>Prices</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="HotelId" />
+            <input type="hidden" asp-for="RoomPriceId" />
 
-            <partial name="_HotelForm" />
+            <partial name="_RoomPricesForm" />
 
             <div class="form-group">
                 <div class="form-check">

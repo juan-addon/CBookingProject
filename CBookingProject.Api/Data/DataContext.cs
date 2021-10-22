@@ -1,9 +1,5 @@
 ﻿using CBookingProject.API.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CBookingProject.API.Data
 {
@@ -16,7 +12,14 @@ namespace CBookingProject.API.Data
 
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomAvailability> RoomAvailabilities { get; set; }
+        public DbSet<RoomPrice> RoomPrices { get; set; }
         public DbSet<Hotel> Hotels { get; set; }
+
+        public DbSet<BookingStatus> BookingStatuses { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Guest> Guests { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +30,20 @@ namespace CBookingProject.API.Data
             modelBuilder.Entity<Hotel>().HasIndex(x => x.Description).IsUnique();
 
             modelBuilder.Entity<Room>().HasIndex(x => x.RoomName).IsUnique();
+
+            modelBuilder.Entity<Room>().HasIndex(x => x.RoomName).IsUnique();
+
+            modelBuilder.Entity<RoomPrice>().Property(x => x.UnitPrice).HasPrecision(19, 4);
+
+            modelBuilder.Entity<RoomAvailability>().Property(x => x.DateFrom).HasColumnType("datetime");
+            modelBuilder.Entity<RoomAvailability>().Property(x => x.DateTo).HasColumnType("datetime");
+
+            modelBuilder.Entity<Guest>().HasIndex(x => x.Identification).IsUnique();
+            modelBuilder.Entity<Guest>().HasIndex(x => x.GuestEmail).IsUnique();
+
+            modelBuilder.Entity<BookingStatus>().HasIndex(x => x.StatusCode).IsUnique();
+            modelBuilder.Entity<BookingStatus>().HasIndex(x => x.StatusDescription).IsUnique();
+
         }
     }
 }

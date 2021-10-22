@@ -7,5 +7,6 @@ namespace CBookingProject.API.Helpers
     {
         IEnumerable<SelectListItem> GetHotels();
         IEnumerable<SelectListItem> GetRoomTypes();
+        IEnumerable<SelectListItem> GetAvailabilitiesList();
     }
 }

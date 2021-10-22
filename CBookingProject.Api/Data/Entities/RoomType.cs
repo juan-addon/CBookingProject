@@ -21,5 +21,6 @@ namespace CBookingProject.API.Data.Entities
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; }
         public ICollection<Room> Rooms { get; set; }
+        public ICollection<RoomAvailability> RoomAvailabilities { get; set; }
     }
 }

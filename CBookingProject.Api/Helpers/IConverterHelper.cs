@@ -7,5 +7,8 @@ namespace CBookingProject.API.Helpers
     {
         RoomTypeViewModel ToRoomTypeViewModel(RoomType roomType);
         RoomViewModel ToRoomViewModel(Room room);
+        RoomAvailabilityViewModel ToRoomAvailabilityViewModel(RoomAvailability availability);
+        RoomPriceViewModel ToRoomPriceViewModel(RoomPrice availability);
+
     }
 }

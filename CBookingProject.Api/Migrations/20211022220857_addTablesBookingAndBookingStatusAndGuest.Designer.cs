@@ -4,14 +4,16 @@ using CBookingProject.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CBookingProject.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211022220857_addTablesBookingAndBookingStatusAndGuest")]
+    partial class addTablesBookingAndBookingStatusAndGuest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +54,7 @@ namespace CBookingProject.API.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Booking");
                 });
 
             modelBuilder.Entity("CBookingProject.API.Data.Entities.BookingStatus", b =>
@@ -77,13 +79,7 @@ namespace CBookingProject.API.Migrations
 
                     b.HasKey("BookingStatusId");
 
-                    b.HasIndex("StatusCode")
-                        .IsUnique();
-
-                    b.HasIndex("StatusDescription")
-                        .IsUnique();
-
-                    b.ToTable("BookingStatuses");
+                    b.ToTable("BookingStatus");
                 });
 
             modelBuilder.Entity("CBookingProject.API.Data.Entities.Guest", b =>
@@ -121,13 +117,7 @@ namespace CBookingProject.API.Migrations
 
                     b.HasKey("GuestNumber");
 
-                    b.HasIndex("GuestEmail")
-                        .IsUnique();
-
-                    b.HasIndex("Identification")
-                        .IsUnique();
-
-                    b.ToTable("Guests");
+                    b.ToTable("Guest");
                 });
 
             modelBuilder.Entity("CBookingProject.API.Data.Entities.Hotel", b =>

@@ -1,9 +1,7 @@
 ﻿using CBookingProject.API.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CBookingProject.API.Helpers
 {
@@ -49,6 +47,23 @@ namespace CBookingProject.API.Helpers
             return list;
         }
 
-        
+        public IEnumerable<SelectListItem> GetAvailabilitiesList()
+        {
+            List<SelectListItem> list = _context.RoomAvailabilities.Select(x => new SelectListItem
+            {
+                Text = x.DateFrom.Date+"--"+x.DateTo.Date+"("+x.AvailabilityDescription+")",
+                Value = $"{x.AvailabilityId}"
+            }).OrderBy(x => x.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione un tipo de habitacion....]",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+
     }
 }

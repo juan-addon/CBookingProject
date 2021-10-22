@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CBookingProject.API.Data.Entities
+namespace CBookingProject.API.Models
 {
-    public class RoomPrice
+    public class RoomPriceViewModel
     {
         [Key]
         public int RoomPriceId { get; set; }
@@ -19,6 +21,6 @@ namespace CBookingProject.API.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [ForeignKey("RoomAvailabilityPriceFK")]
         public int RoomAvailabilityId { get; set; }
-        public RoomAvailability RoomAvailabilities { get; set; }
+        public IEnumerable<SelectListItem> RoomAvailabilities { get; set; }
     }
 }

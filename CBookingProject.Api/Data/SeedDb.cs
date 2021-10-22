@@ -16,6 +16,7 @@ namespace CBookingProject.API.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckHotelsAsync();
+            await CheckBookingAsync();
             //await CheckRoomTypesAsync();
         }
 
@@ -23,6 +24,15 @@ namespace CBookingProject.API.Data
         {
             if (!_context.Hotels.Any()) {
                 _context.Hotels.Add(new Hotel { HotelName="Hotel Cancum", Address="Test Address", City="Mexico", Description="Hotel", Email="testing@cancum.com", Status=true });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckBookingAsync()
+        {
+            if (!_context.RoomTypes.Any())
+            {
+                _context.RoomTypes.Add(new RoomType { RoomDescription = "Twin Room", Status = true });
                 await _context.SaveChangesAsync();
             }
         }
