@@ -30,9 +30,14 @@ namespace CBookingProject.API.Data
 
         private async Task CheckBookingAsync()
         {
-            if (!_context.RoomTypes.Any())
+            if (!_context.BookingStatuses.Any())
             {
-                _context.RoomTypes.Add(new RoomType { RoomDescription = "Twin Room", Status = true });
+                _context.BookingStatuses.Add(new BookingStatus 
+                { StatusCode="CANCEL", StatusDescription="CANCEL", Status = true });
+
+                _context.BookingStatuses.Add(new BookingStatus
+                { StatusCode = "ACTIVE", StatusDescription = "ACTIVE", Status = true });
+
                 await _context.SaveChangesAsync();
             }
         }

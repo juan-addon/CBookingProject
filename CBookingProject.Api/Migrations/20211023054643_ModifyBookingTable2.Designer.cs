@@ -4,14 +4,16 @@ using CBookingProject.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CBookingProject.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211023054643_ModifyBookingTable2")]
+    partial class ModifyBookingTable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,6 +28,9 @@ namespace CBookingProject.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AvailabilityId")
+                        .HasColumnType("int");
+
                     b.Property<int>("BookingStatusId")
                         .HasColumnType("int");
 
@@ -38,7 +43,7 @@ namespace CBookingProject.API.Migrations
                     b.Property<int>("GuestId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoomAvailabilityId")
+                    b.Property<int?>("RoomAvailabilitiesAvailabilityId")
                         .HasColumnType("int");
 
                     b.Property<int>("RoomId")
@@ -52,6 +57,8 @@ namespace CBookingProject.API.Migrations
                     b.HasIndex("BookingStatusId");
 
                     b.HasIndex("GuestId");
+
+                    b.HasIndex("RoomAvailabilitiesAvailabilityId");
 
                     b.HasIndex("RoomId");
 
@@ -318,6 +325,10 @@ namespace CBookingProject.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CBookingProject.API.Data.Entities.RoomAvailability", "RoomAvailabilities")
+                        .WithMany("Bookings")
+                        .HasForeignKey("RoomAvailabilitiesAvailabilityId");
+
                     b.HasOne("CBookingProject.API.Data.Entities.Room", "Rooms")
                         .WithMany("Bookings")
                         .HasForeignKey("RoomId")
@@ -327,6 +338,8 @@ namespace CBookingProject.API.Migrations
                     b.Navigation("BookingStatus");
 
                     b.Navigation("Guests");
+
+                    b.Navigation("RoomAvailabilities");
 
                     b.Navigation("Rooms");
                 });
@@ -397,6 +410,8 @@ namespace CBookingProject.API.Migrations
 
             modelBuilder.Entity("CBookingProject.API.Data.Entities.RoomAvailability", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("RoomPrices");
                 });
 
