@@ -21,7 +21,6 @@ namespace CBookingProject.API.Models
     {
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
-        public int BookingStatusId { get; set; }
         public int RoomId { get; set; }
         public int RoomAvailabilityId { get; set; }
     }

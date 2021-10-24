@@ -16,6 +16,8 @@ namespace CBookingProject.API.Models
         public int MinimumAdvanceReservation { get; set; }
         public int MaximumAdvanceReservatio { get; set; }
         public int MaxDayAllowed { get; set; }
+        public int RoomQuantity { get; set; }
+        public int BookingQuantity { get; set; }
 
     }
 }
