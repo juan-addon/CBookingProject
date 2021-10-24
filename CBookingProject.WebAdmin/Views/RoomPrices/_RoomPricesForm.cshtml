@@ -1,0 +1,14 @@
+﻿@model CBookingProject.WebAdmin.Models.RoomPriceViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="form-group">
+    <label asp-for="UnitPrice" class="control-label"></label>
+    <input asp-for="UnitPrice" class="form-control" />
+    <span asp-validation-for="UnitPrice" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="RoomAvailabilityId" class="control-label"></label>
+    <select asp-for="RoomAvailabilityId" asp-items="Model.RoomAvailabilities" class="form-control"></select>
+    <span asp-validation-for="RoomAvailabilityId" class="text-danger"></span>
+</div>

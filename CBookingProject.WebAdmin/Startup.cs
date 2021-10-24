@@ -1,6 +1,5 @@
-using CBookingProject.API.Converters;
-using CBookingProject.API.Services;
 using CBookingProject.Data;
+using CBookingProject.WebAdmin.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace CBookingProject.API
+
+namespace CBookingProject.WebAdmin
 {
     public class Startup
     {
@@ -22,31 +22,15 @@ namespace CBookingProject.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new DateConverter());
-            });
-
+            services.AddControllersWithViews();
             services.AddDbContext<DataContext>(x =>
             {
                 x.UseSqlServer(Configuration.GetConnectionString("BookingAppConnection"));
             });
 
             services.AddTransient<SeedDb>();
-            services.AddScoped<IRoomAvailabilityService, RoomAvailabilityImpl>();
-            services.AddScoped<IBookingService, BookingService>();
-
-
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1",
-                    new Microsoft.OpenApi.Models.OpenApiInfo
-                    {
-                        Title = "Booking API",
-                        Description = "Booking API",
-                        Version = "v1"
-                    });
-            });
+            services.AddScoped<ICombosHelper, CombosHelper>();
+            services.AddScoped<IConverterHelper, ConverterHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,7 +43,6 @@ namespace CBookingProject.API
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -71,16 +54,9 @@ namespace CBookingProject.API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-            });
-
-
-            app.UseSwagger();
-
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Booking API");
-                options.RoutePrefix = "";
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Hotels}/{action=Index}/{id?}");
             });
         }
     }

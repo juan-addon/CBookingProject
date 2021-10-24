@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace CBookingProject.API
+namespace CBookingProject.WebAdmin
 {
     public class Program
     {

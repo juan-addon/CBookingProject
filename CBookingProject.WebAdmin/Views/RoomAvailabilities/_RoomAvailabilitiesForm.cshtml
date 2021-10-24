@@ -1,0 +1,46 @@
+﻿@model CBookingProject.WebAdmin.Models.RoomAvailabilityViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="form-group">
+    <label asp-for="AvailabilityDescription" class="control-label"></label>
+    <input asp-for="AvailabilityDescription" class="form-control" />
+    <span asp-validation-for="AvailabilityDescription" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="RoomTypeId" class="control-label"></label>
+    <select asp-for="RoomTypeId" asp-items="Model.RoomTypes" class="form-control"></select>
+    <span asp-validation-for="RoomTypeId" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="DateFrom" class="control-label"></label>
+    <input asp-for="DateFrom" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+    <span asp-validation-for="DateFrom" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="DateTo" class="control-label"></label>
+    <input asp-for="DateTo" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+    <span asp-validation-for="DateTo" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="MinimumAdvanceReservation" class="control-label"></label>
+    <input asp-for="MinimumAdvanceReservation" class="form-control" />
+    <span asp-validation-for="MinimumAdvanceReservation" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="MaximumAdvanceReservatio" class="control-label"></label>
+    <input asp-for="MaximumAdvanceReservatio" class="form-control" />
+    <span asp-validation-for="MaximumAdvanceReservatio" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="MaxDayAllowed" class="control-label"></label>
+    <input asp-for="MaxDayAllowed" class="form-control" />
+    <span asp-validation-for="MaxDayAllowed" class="text-danger"></span>
+</div>
+
