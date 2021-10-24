@@ -1,4 +1,5 @@
 ﻿using CBookingProject.API.Models;
+using CBookingProject.API.Services;
 using CBookingProject.Data;
 using CBookingProject.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -6,12 +7,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBookingProject.API.Services {
-    public class BookingService : IBookingService
+namespace CBookingProject.API.Repository {
+    public class BookingRepository : IBookingService
     {
         private readonly DataContext _context;
         private readonly IRoomAvailabilityService _availabilityService;
-        public BookingService(DataContext context, IRoomAvailabilityService availabilityService)
+        public BookingRepository(DataContext context, IRoomAvailabilityService availabilityService)
         {
             _context = context;
             _availabilityService = availabilityService;
@@ -23,7 +24,7 @@ namespace CBookingProject.API.Services {
             {
                 try
                 {
-                    var Availability = _availabilityService.CheckAvailability(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
+                    var Availability = _availabilityService.CheckAvailabilityInDate(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
 
                     if (Availability.Result.IsSuccess)
                     {
@@ -68,7 +69,7 @@ namespace CBookingProject.API.Services {
                 using (var transaction = _context.Database.BeginTransaction())
                 {
 
-                    var Availability = _availabilityService.CheckAvailability(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
+                    var Availability = _availabilityService.CheckAvailabilityInDate(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
 
                     if (Availability.Result.IsSuccess)
                     {
@@ -122,7 +123,7 @@ namespace CBookingProject.API.Services {
             using (var transaction = _context.Database.BeginTransaction())
             {
 
-                var Availability = _availabilityService.CheckAvailability(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
+                var Availability = _availabilityService.CheckAvailabilityInDate(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
 
                 if (Availability.Result.IsSuccess)
                 {

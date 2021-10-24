@@ -14,13 +14,12 @@ namespace CBookingProject.WebAdmin.Models
         public int AvailabilityId { get; set; }
 
         [Display(Name = "Season")]
-        [MaxLength(50, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(50, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string AvailabilityDescription { get; set; }
 
         [Display(Name = "Date From")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-        //[DateFrom(ErrorMessage = "Back date entry not allowed")]
         public DateTime? DateFrom { get; set; }
         [Display(Name = "Date To")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
@@ -28,16 +27,16 @@ namespace CBookingProject.WebAdmin.Models
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
         [Display(Name = "Minimum Advance reservations(Days)")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public int MinimumAdvanceReservation { get; set; }
         [Display(Name = "Maximum Advance reservations(Days)")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public int MaximumAdvanceReservatio { get; set; }
         [Display(Name = "Max Allowed Days")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public int MaxDayAllowed { get; set; }
         [Display(Name = "Room Type")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        [Required(ErrorMessage = "The field {0} is required")]
         [ForeignKey("RoomTypeAvailabilitydFK")]
         public int RoomTypeId { get; set; }
         public IEnumerable<SelectListItem> RoomTypes { get; set; }

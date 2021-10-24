@@ -9,12 +9,12 @@ namespace CBookingProject.Data.Entities
         public int BookingStatusId { get; set; }
 
         [Display(Name = "Status Description")]
-        [MaxLength(50, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(50, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string StatusDescription { get; set; }
         [Display(Name = "Status Code")]
-        [MaxLength(10, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(10, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string StatusCode { get; set; }
         [DefaultValue(true)]
         public bool Status { get; set; } = true;

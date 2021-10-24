@@ -11,14 +11,14 @@ namespace CBookingProject.WebAdmin.Models
         public int Id { get; set; }
 
         [Display(Name = "Room Type")]
-        [MaxLength(50, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(50, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string RoomDescription { get; set; }
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
         [Display(Name = "Hotel")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un Hotel.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select the hotel.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public int HotelId { get; set; }
         public IEnumerable<SelectListItem> Hotels { get; set; }
     }

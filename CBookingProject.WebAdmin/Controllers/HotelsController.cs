@@ -10,7 +10,6 @@ namespace CBookingProject.WebAdmin.Controllers
     public class HotelsController : Controller
     {
         private readonly DataContext _context;
-
         public HotelsController(DataContext context)
         {
             _context = context;
@@ -21,7 +20,7 @@ namespace CBookingProject.WebAdmin.Controllers
             return View(await _context.Hotels.ToListAsync());
         }
 
-        // GET: RoomTypes/Create
+        // GET: Hotels/Create
         public IActionResult Create()
         {
             return View();
@@ -44,7 +43,7 @@ namespace CBookingProject.WebAdmin.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este Hotel");
+                        ModelState.AddModelError(string.Empty, "This Hotel already exists");
                     }
                     else
                     {
@@ -61,7 +60,7 @@ namespace CBookingProject.WebAdmin.Controllers
             return View(hotel);
         }
 
-        // GET: RoomTypes/Edit/5
+        // GET: Hotels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,7 +97,7 @@ namespace CBookingProject.WebAdmin.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este hotel");
+                        ModelState.AddModelError(string.Empty, "This Hotel already exists");
                     }
                     else
                     {
@@ -116,7 +115,7 @@ namespace CBookingProject.WebAdmin.Controllers
             return View(hotel);
         }
 
-        // GET: RoomTypes/Delete/5
+        // GET: Hotels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

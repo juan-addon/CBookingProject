@@ -11,25 +11,25 @@ namespace CBookingProject.WebAdmin.Models
     {
         public int RoomId { get; set; }
         [Display(Name = "People Quantity")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
-        [Range(1, 10, ErrorMessage = "Personas maximas de 0 a 12")]
+        [Required(ErrorMessage = "The field {0} is required")]
+        [Range(1, 10, ErrorMessage = "The maximum number of people per room must be between 1 and 12")]
         public int PeopleCapacity { get; set; }
         [Display(Name = "Room Quantity")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
-        [Range(1, 10000, ErrorMessage = "Cantidad de habitaciones de 1 a 1000")]
+        [Required(ErrorMessage = "The field {0} is required")]
+        [Range(1, 10000, ErrorMessage = "The number of rooms must be between 1 and 1000")]
         public int RoomQuantity { get; set; }
         [Display(Name = "Room Name")]
-        [MaxLength(50, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(50, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string RoomName { get; set; }
         [Display(Name = "Description")]
-        [MaxLength(1000, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(1000, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string RoomDescription { get; set; }
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
         [Display(Name = "Room Type")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        [Required(ErrorMessage = "The field {0} is required")]
         [ForeignKey("RoomTypeRoomIdFK")]
         public int RoomTypeId { get; set; }
         public IEnumerable<SelectListItem> RoomTypes { get; set; }

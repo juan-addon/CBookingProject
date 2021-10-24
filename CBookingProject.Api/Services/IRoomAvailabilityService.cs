@@ -6,6 +6,8 @@ namespace CBookingProject.API.Services
 {
     public interface IRoomAvailabilityService
     {
-        public Task<Response> CheckAvailability(DateTime FromDate, DateTime DateTo);
+        public Task<Response> CheckAvailabilityInDate(DateTime FromDate, DateTime DateTo);
+        public Task<Response> QuantityBooking(DateTime FromDate, DateTime DateTo, int AvailabilityId, int RoomId);
     }
+    
 }

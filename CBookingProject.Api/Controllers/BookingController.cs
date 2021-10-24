@@ -41,7 +41,7 @@ namespace CBookingProject.API.Controllers.API
         {
             if (IsDateTime(search.FromDate.ToShortDateString()) && IsDateTime(search.DateTo.ToShortDateString()))
             {
-                var result = _availabilityService.CheckAvailability(search.FromDate, search.DateTo);
+                var result = _availabilityService.CheckAvailabilityInDate(search.FromDate, search.DateTo);
 
                 return Ok(result.Result);
             }

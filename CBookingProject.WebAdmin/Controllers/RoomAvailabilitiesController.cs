@@ -23,7 +23,7 @@ namespace CBookingProject.WebAdmin.Controllers
         // GET: Room
         public async Task<IActionResult> Index()
         {
-            return View(await _context.RoomAvailabilities.ToListAsync());
+            return View(await _context.RoomAvailabilities.Include(m=>m.RoomType).ToListAsync());
         }
 
         // GET: Room/Create
@@ -58,7 +58,7 @@ namespace CBookingProject.WebAdmin.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de habitacion");
+                        ModelState.AddModelError(string.Empty, "This availability already exists.");
                     }
                     else
                     {
@@ -120,7 +120,7 @@ namespace CBookingProject.WebAdmin.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de habitacion");
+                        ModelState.AddModelError(string.Empty, "This availability already exists.");
                     }
                     else
                     {

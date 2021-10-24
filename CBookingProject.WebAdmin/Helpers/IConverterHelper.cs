@@ -9,6 +9,5 @@ namespace CBookingProject.WebAdmin.Helpers
         RoomViewModel ToRoomViewModel(Room room);
         RoomAvailabilityViewModel ToRoomAvailabilityViewModel(RoomAvailability availability);
         RoomPriceViewModel ToRoomPriceViewModel(RoomPrice availability);
-
     }
 }

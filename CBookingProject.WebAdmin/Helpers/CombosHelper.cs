@@ -23,7 +23,7 @@ namespace CBookingProject.WebAdmin.Helpers
 
             list.Insert(0, new SelectListItem
             {
-                Text = "[Seleccione un tipo de documento....]",
+                Text = "[Select the hotel....]",
                 Value = "0"
             });
 
@@ -40,7 +40,7 @@ namespace CBookingProject.WebAdmin.Helpers
 
             list.Insert(0, new SelectListItem
             {
-                Text = "[Seleccione un tipo de habitacion....]",
+                Text = "[Select room type....]",
                 Value = "0"
             });
 
@@ -57,7 +57,7 @@ namespace CBookingProject.WebAdmin.Helpers
 
             list.Insert(0, new SelectListItem
             {
-                Text = "[Seleccione un tipo de habitacion....]",
+                Text = "[Select an availability....]",
                 Value = "0"
             });
 

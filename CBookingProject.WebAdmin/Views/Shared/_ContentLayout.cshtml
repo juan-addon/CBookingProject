@@ -1,0 +1,38 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_Header")
+
+<div class="page-container">
+    <div class="page-content">
+
+        @Html.Partial("_sidebarMain")
+        <div class="content-wrapper">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        @ViewData["Panel-title"]
+                        <a class="heading-elements-toggle">
+                            <i class="icon-more"></i>
+                        </a>
+                    </h5>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                            <li><a data-action="close"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Footer")
+@RenderSection("Scripts", required: false)

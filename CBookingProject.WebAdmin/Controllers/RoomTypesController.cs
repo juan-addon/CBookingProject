@@ -57,7 +57,7 @@ namespace CBookingProject.WebAdmin.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de habitacion");
+                        ModelState.AddModelError(string.Empty, "This type of room already exists.");
                     }
                     else
                     {
@@ -116,7 +116,7 @@ namespace CBookingProject.WebAdmin.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de habitacion");
+                        ModelState.AddModelError(string.Empty, "This type of room already exists.");
                     }
                     else
                     {

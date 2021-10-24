@@ -1,4 +1,5 @@
 using CBookingProject.API.Converters;
+using CBookingProject.API.Repository;
 using CBookingProject.API.Services;
 using CBookingProject.Data;
 using Microsoft.AspNetCore.Builder;
@@ -33,8 +34,8 @@ namespace CBookingProject.API
             });
 
             services.AddTransient<SeedDb>();
-            services.AddScoped<IRoomAvailabilityService, RoomAvailabilityImpl>();
-            services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IRoomAvailabilityService, RoomRepository>();
+            services.AddScoped<IBookingService, BookingRepository>();
 
 
             services.AddSwaggerGen(options =>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -126,6 +126,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\css\core\icons\glyphicons\glyphicons-halflings-regular.svg" />
+    <None Include="wwwroot\css\core\icons\glyphicons\glyphicons-halflings-regular.woff2" />
+    <None Include="wwwroot\css\core\icons\icomoon\fonts\icomoon.svg" />
+    <None Include="wwwroot\js\core\app.js" />
+    <None Include="wwwroot\js\core\app.min.js" />
+    <None Include="wwwroot\lib\js\app.min.js" />
+    <None Include="wwwroot\lib\js\app.min.min.js" />
+    <None Include="wwwroot\lib\js\apph.min.js" />
+    <None Include="wwwroot\lib\js\apph.min.min.js" />
+    <None Include="wwwroot\lib\js\uniform.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
       <PrivateAssets>all</PrivateAssets>
@@ -135,6 +148,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CBookingProject.Data\CBookingProject.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repository\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

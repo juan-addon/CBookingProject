@@ -52,7 +52,10 @@ namespace CBookingProject.WebAdmin.Helpers
                 AvailabilityDescription = availability.AvailabilityDescription,
                 AvailabilityId = availability.AvailabilityId,
                 RoomTypeId = availability.RoomTypeId,
-                Status = availability.Status
+                Status = availability.Status,
+                MaxDayAllowed = availability.MaxDayAllowed,
+                MaximumAdvanceReservatio = availability.MaximumAdvanceReservatio,
+                MinimumAdvanceReservation = availability.MinimumAdvanceReservation
             };
         }
 

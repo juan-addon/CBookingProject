@@ -10,20 +10,20 @@ namespace CBookingProject.Data.Entities
         [Key]
         public int GuestNumber { get; set; }
         [Display(Name = "Identification")]
-        [MaxLength(50, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(50, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string Identification { get; set; }
         [Display(Name = "Guest Name")]
-        [MaxLength(50, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(50, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string GuestName { get; set; }
         [Display(Name = "Guest LastName")]
-        [MaxLength(50, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(50, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         public string GuestLastName { get; set; }
         [Display(Name = "Email")]
-        [MaxLength(120, ErrorMessage = "El campo no puede tener mas de {1} caracteres")]
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        [MaxLength(120, ErrorMessage = "The field {0} cannot have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is required")]
         [DataType(DataType.EmailAddress)]
         [EmailAddress]
         [RegularExpression(@"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}", ErrorMessage = "Please enter correct email")]
