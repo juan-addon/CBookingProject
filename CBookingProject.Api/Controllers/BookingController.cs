@@ -41,9 +41,22 @@ namespace CBookingProject.API.Controllers.API
         {
             if (IsDateTime(search.FromDate.ToShortDateString()) && IsDateTime(search.DateTo.ToShortDateString()))
             {
-                var result = _availabilityService.CheckAvailabilityInDate(search.FromDate, search.DateTo);
+                if (this.CompareDates(search.FromDate, search.DateTo))
+                {
+                    var result = _availabilityService.CheckAvailabilityInDate(search.FromDate, search.DateTo);
 
-                return Ok(result.Result);
+                    return Ok(result.Result);
+                }
+                else
+                {
+                    return Ok(
+                        new Response
+                        {
+                            IsSuccess = false,
+                            Message = "Invalid date parameters."
+                        }
+                     );
+                }
             }
             else {
                 return Ok(
@@ -54,10 +67,7 @@ namespace CBookingProject.API.Controllers.API
                          }
                     );
             }
-
         }
-
-
 
         /// <summary>
         /// This Post method allows end users to make room reservations according to room availability.

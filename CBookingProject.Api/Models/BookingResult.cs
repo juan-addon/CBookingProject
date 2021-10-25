@@ -8,6 +8,8 @@ namespace CBookingProject.API.Models
         public string AvailabilityDescription { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
+        public DateTime DateFromRequested { get; set; }
+        public DateTime DateToRequested { get; set; }
         public string RoomType { get; set; }
         public string RoomName { get; set; }
         public int PeopleCapacity { get; set; }

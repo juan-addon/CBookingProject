@@ -70,8 +70,10 @@ namespace CBookingProject.API.Repository
                         {
                             AvailabilityId = availability.AvailabilityId,
                             AvailabilityDescription = availability.AvailabilityDescription,
-                            DateFrom = FromDate.Date,
-                            DateTo = DateTo.Date,
+                            DateFrom = availability.DateFrom,
+                            DateTo = availability.DateTo,
+                            DateFromRequested =FromDate.Date,
+                            DateToRequested = DateTo.Date,
                             RoomType = availability.AvailabilityDescription,
                             RoomName = availability.RoomName,
                             PeopleCapacity = availability.PeopleCapacity,
