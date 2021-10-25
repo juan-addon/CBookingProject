@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "apis1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/CBookingProjectAPIapi/apis/CBookingProjectAPI",
+      "type": "apis.azure"
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/bookingprojectdb/databases/BookingApp.WebAdmin_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:BookingAppConnection",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

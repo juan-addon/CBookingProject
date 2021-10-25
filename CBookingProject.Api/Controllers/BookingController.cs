@@ -9,7 +9,7 @@ using System.Globalization;
 namespace CBookingProject.API.Controllers.API
 {
     /// <summary>
-    /// Descripcion del API
+    /// API DESCRIPTION
     /// </summary>
 
     [ApiController]
@@ -36,7 +36,7 @@ namespace CBookingProject.API.Controllers.API
         /// Maximum days allowed in the reserved room are 3 days.
         /// </summary>
         /// <returns>An array with the list of available rooms.</returns>
-        [HttpPost("CheckAvailability")]
+        [HttpGet("CheckAvailability")]
         public IActionResult CheckAvailability([FromQuery] SearchParameters search)
         {
             if (IsDateTime(search.FromDate.ToShortDateString()) && IsDateTime(search.DateTo.ToShortDateString()))
@@ -67,12 +67,25 @@ namespace CBookingProject.API.Controllers.API
         /// the array will include the reservation detail
         /// </returns>
         [HttpPost("SaveBooking")]
-        public IActionResult SaveBooking([FromQuery] BookingViewModel booking)
+        public IActionResult SaveBooking([FromBody] BookingViewModel booking)
         {
             if (IsDateTime(booking.Bookings.DateFrom.ToShortDateString()) && IsDateTime(booking.Bookings.DateTo.ToShortDateString()))
             {
-                var result = _bookingService.AddNewBookingWithGuest(booking);
-                return Ok(result.Result);
+                if (this.CompareDates(booking.Bookings.DateFrom, booking.Bookings.DateTo))
+                {
+                    var result = _bookingService.AddNewBookingWithGuest(booking);
+                    return Ok(result.Result);
+                }
+                else {
+                    return Ok(
+                        new Response
+                        {
+                            IsSuccess = false,
+                            Message = "Invalid date parameters."
+                        }
+                     );
+                }
+               
             }
             else
             {
@@ -96,13 +109,28 @@ namespace CBookingProject.API.Controllers.API
         /// the array will include the reservation detail
         /// </returns>
         [HttpPut("ModifyBooking/{BookingId}")]
-        public IActionResult ModifyBooking(int BookingId, [FromQuery] BookingViewModel booking)
+        public IActionResult ModifyBooking(int BookingId, [FromBody] BookingViewModel booking)
         {
 
             if (IsDateTime(booking.Bookings.DateFrom.ToShortDateString()) && IsDateTime(booking.Bookings.DateTo.ToShortDateString()))
             {
-                var result = _bookingService.ModifyBooking(BookingId, booking);
-                return Ok(result.Result);
+                if (this.CompareDates(booking.Bookings.DateFrom, booking.Bookings.DateTo))
+                {
+                    var result = _bookingService.ModifyBooking(BookingId, booking);
+                    return Ok(result.Result);
+                }
+                else
+                {
+                    return Ok(
+                        new Response
+                        {
+                            IsSuccess = false,
+                            Message = "Invalid date parameters."
+                        }
+                     );
+                }
+
+                
             }
             else
             {
@@ -124,37 +152,56 @@ namespace CBookingProject.API.Controllers.API
         /// the array will include the reservation detail
         /// </returns>
         [HttpDelete("CancelBooking/{BookingId}")]
-        public async Task<IActionResult> CancelBooking(int BookingId, [FromQuery] BookingViewModel booking)
+        public async Task<IActionResult> CancelBooking(int BookingId, [FromBody] BookingCancelParameters booking)
         {
-            if (IsDateTime(booking.Bookings.DateFrom.ToShortDateString()) && IsDateTime(booking.Bookings.DateTo.ToShortDateString()))
-            {
-                var result = _bookingService.CancelBooking(BookingId, booking);
-                return Ok(result.Result);
-            }
-            else
-            {
-                return Ok(
-                         new Response
-                         {
-                             IsSuccess = false,
-                             Message = "Invalid date parameters."
-                         }
-                    );
-            }
+            var result = _bookingService.CancelBooking(BookingId, booking);
+            return Ok(result.Result);
+        }
+
+        /// <summary>
+        /// This Get method Allows you to list the active reservations that a user has, 
+        /// filtering by guest number and guest identification.
+        /// </summary>
+        /// <returns>
+        /// An Array with the status of the save action, if the record is stored successfully 
+        /// the array will include the reservation detail
+        /// </returns>
+        [HttpGet("GetBookingsByGuest/{GuestNumber}/{GuestIdentification}")]
+        public async Task<IActionResult> GetBookingsByUser(int GuestNumber, string GuestIdentification)
+        {
+            var result = _bookingService.GetBookingsByGuestNumber(GuestNumber,GuestIdentification);
+            return Ok(result.Result);
         }
 
         private bool IsDateTime(string date) {
 
             DateTime dateConverted;
 
-            string pattern = "MM/dd/yyyy";
+            string[] formats = { "dd/MM/yyyy", "dd/M/yyyy", "d/M/yyyy", "d/MM/yyyy",
+                    "dd/MM/yy", "dd/M/yy", "d/M/yy", "d/MM/yy","dd-MM-yyyy", "dd-M-yyyy", "d-M-yyyy", "d-MM-yyyy",
+                    "dd-MM-yy", "dd-M-yy", "d-M-yy", "d-MM-yy","MM/dd/yyyy"};
+
             CultureInfo enUS = new CultureInfo("en-US");
-            if (!DateTime.TryParseExact(date, pattern, enUS,
+            if (!DateTime.TryParseExact(date, formats, enUS,
                                 DateTimeStyles.AdjustToUniversal, out dateConverted))
             {
                 return false;
             }
             else {
+                return true;
+            }
+        }
+
+        private bool CompareDates(DateTime FromDate, DateTime ToDate)
+        {
+            int result = DateTime.Compare(FromDate, ToDate);
+           
+            if (result>0)
+            {
+                return false;
+            }
+            else
+            {
                 return true;
             }
         }

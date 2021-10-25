@@ -57,6 +57,7 @@ namespace CBookingProject.WebAdmin
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Hotels}/{action=Index}/{id?}");
+                
             });
         }
     }

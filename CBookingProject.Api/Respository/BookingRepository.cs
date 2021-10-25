@@ -7,7 +7,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CBookingProject.API.Repository {
+namespace CBookingProject.API.Repository
+{
     public class BookingRepository : IBookingService
     {
         private readonly DataContext _context;
@@ -19,37 +20,69 @@ namespace CBookingProject.API.Repository {
         }
 
         public async Task<Response> AddNewBookingWithGuest(BookingViewModel bookingViewModel)
-    {
-            using (var transaction = _context.Database.BeginTransaction())
+        {
+            using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var Availability = _availabilityService.CheckAvailabilityInDate(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
+                    Task<Response> Availability = _availabilityService.CheckAvailabilityInDate(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
 
                     if (Availability.Result.IsSuccess)
                     {
 
-                        int GuestNumber = this.AddNewGuest(bookingViewModel);
-                        int BookingNumber = this.AddNewBooking(bookingViewModel, GuestNumber);
+                        Response ResultGuest = AddNewGuest(bookingViewModel);
 
-                        transaction.Commit();
-
-                        return new Response
+                        if (ResultGuest.IsSuccess)
                         {
-                            IsSuccess = true,
-                            Message = "Reservation completed successfully.",
-                            Result = new {
-                                GuestNumber= GuestNumber,
-                                BookingNumber= BookingNumber,
-                                DateFrom = bookingViewModel.Bookings.DateFrom,
-                                DateTo =  bookingViewModel.Bookings.DateTo
+                            Guest InserteredGuest = (Guest)ResultGuest.Result;
+
+                            Response BookingResult = AddNewBooking(bookingViewModel, InserteredGuest.GuestNumber);
+                            if (BookingResult.IsSuccess)
+                            {
+                                transaction.Commit();
+
+                                Booking InserteredBooking = (Booking)BookingResult.Result;
+
+                                return new Response
+                                {
+                                    IsSuccess = true,
+                                    Message = "Reservation completed successfully.",
+                                    Result = new
+                                    {
+                                        GuestNumber = InserteredGuest.GuestNumber,
+                                        BookingNumber = InserteredBooking.BookingId,
+                                        DateFrom = bookingViewModel.Bookings.DateFrom,
+                                        DateTo = bookingViewModel.Bookings.DateTo.AddDays(1).AddSeconds(-1)
+                                    }
+                                };
                             }
-                        };
+                            else
+                            {
+                                transaction.Rollback();
+                                return new Response
+                                {
+                                    IsSuccess = false,
+                                    Message = BookingResult.Message
+                                };
+                            }
+
+
+                        }
+                        else
+                        {
+                            transaction.Rollback();
+                            return new Response
+                            {
+                                IsSuccess = false,
+                                Message = ResultGuest.Message
+                            };
+                        }
                     }
-                    else {
+                    else
+                    {
                         return new Response
                         {
-                            IsSuccess = true,
+                            IsSuccess = false,
                             Message = "Oops, it seems that the room you want to reserve does not have availability for the indicated dates."
                         };
                     }
@@ -63,19 +96,22 @@ namespace CBookingProject.API.Repository {
                     };
                 }
             }
-    }
+        }
         public async Task<Response> ModifyBooking(int BookingId, BookingViewModel bookingViewModel)
         {
-                using (var transaction = _context.Database.BeginTransaction())
-                {
+            using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = _context.Database.BeginTransaction())
+            {
 
+                try
+                {
                     var Availability = _availabilityService.CheckAvailabilityInDate(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
 
                     if (Availability.Result.IsSuccess)
                     {
-                        int GuestNumber = this.ValidateGuestNumber(bookingViewModel);
+                        int GuestNumber = this.ValidateGuestNumber(bookingViewModel.Guests.Identification, bookingViewModel.Guests.GuestEmail);
                         if (GuestNumber == 0)
                         {
+                            transaction.Dispose();
                             return new Response
                             {
                                 IsSuccess = false,
@@ -86,50 +122,63 @@ namespace CBookingProject.API.Repository {
                         {
                             var ModifiedBookingId = this.SaveModifiedBooking(BookingId, bookingViewModel, GuestNumber);
 
-                        if (ModifiedBookingId.IsSuccess)
-                        {
-                            transaction.Commit();
-
-                            return new Response
+                            if (ModifiedBookingId.IsSuccess)
                             {
-                                IsSuccess = true,
-                                Message = "Reservation satisfactorily modified.",
-                                Result = new
+                                transaction.Commit();
+
+                                return new Response
                                 {
-                                    ModifiedBookingId = ModifiedBookingId.Result,
-                                    GuestNumber = GuestNumber,
-                                    DateFrom = bookingViewModel.Bookings.DateFrom,
-                                    DateTo = bookingViewModel.Bookings.DateTo
-                                }
-                            };
-                        }
-                        else {
-                            return ModifiedBookingId;
-                        }
+                                    IsSuccess = true,
+                                    Message = "Reservation satisfactorily modified.",
+                                    Result = new
+                                    {
+                                        ModifiedBookingId = ModifiedBookingId.Result,
+                                        GuestNumber = GuestNumber,
+                                        DateFrom = bookingViewModel.Bookings.DateFrom,
+                                        DateTo = bookingViewModel.Bookings.DateTo.AddDays(1).AddSeconds(-1)
+                                    }
+                                };
+                            }
+                            else
+                            {
+                                transaction.Rollback();
+                                return new Response
+                                {
+                                    IsSuccess = false,
+                                    Message = ModifiedBookingId.Message
+                                };
+                            }
                         }
                     }
                     else
                     {
                         return new Response
                         {
-                            IsSuccess = true,
+                            IsSuccess = false,
                             Message = "Oops, it seems that the room you want to reserve does not have availability for the indicated dates."
                         };
                     }
+                }
+                catch (Exception e)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = e.Message
+                    };
+                }
             }
         }
-        public async Task<Response> CancelBooking(int BookingId, BookingViewModel bookingViewModel)
+        public async Task<Response> CancelBooking(int BookingId, BookingCancelParameters bookingCancelViewModel)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
-
-                var Availability = _availabilityService.CheckAvailabilityInDate(bookingViewModel.Bookings.DateFrom, bookingViewModel.Bookings.DateTo);
-
-                if (Availability.Result.IsSuccess)
+                try
                 {
-                    int GuestNumber = this.ValidateGuestNumber(bookingViewModel);
+                    int GuestNumber = ValidateGuestNumber(bookingCancelViewModel.GuestIdentification, bookingCancelViewModel.GuestEmail);
                     if (GuestNumber == 0)
                     {
+                        transaction.Dispose();
                         return new Response
                         {
                             IsSuccess = false,
@@ -138,7 +187,7 @@ namespace CBookingProject.API.Repository {
                     }
                     else
                     {
-                        var CanceledBooking = this.SaveCancelBooking(BookingId, bookingViewModel, GuestNumber);
+                        Response CanceledBooking = SaveCancelBooking(BookingId, bookingCancelViewModel, GuestNumber);
 
                         if (CanceledBooking.IsSuccess)
                         {
@@ -151,19 +200,134 @@ namespace CBookingProject.API.Repository {
                                 Result = new
                                 {
                                     ModifiedBookingId = CanceledBooking.Result,
-                                    GuestNumber = GuestNumber,
-                                    DateFrom = bookingViewModel.Bookings.DateFrom,
-                                    DateTo = bookingViewModel.Bookings.DateTo
+                                    GuestNumber = GuestNumber
                                 }
                             };
                         }
                         else
                         {
-                            return CanceledBooking;
+                            transaction.Rollback();
+                            return new Response
+                            {
+                                IsSuccess = false,
+                                Message = CanceledBooking.Message
+                            };
                         }
                     }
                 }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = e.Message
+                    };
+                }
+            }
+        }
+        public async Task<Response> GetBookingsByGuestNumber(int guestNumber, string guestIdentification)
+        {
+            try
+            {
+                var bookings = await _context.Bookings
+                      .Include(x => x.Rooms).Join(_context.Guests,
+                        booking => booking.GuestId,
+                        guest => guest.GuestNumber,
+                        (booking, guest) => new
+                        {
+                            GuestNumber = guest.GuestNumber,
+                            GuestIdentification = guest.Identification,
+                            RoomId = booking.RoomId,
+                            RoomDescription = booking.Rooms.RoomDescription,
+                            BookingNumber = booking.BookingId,
+                            FromDate = booking.DateFrom,
+                            ToDate = booking.DateTo.AddDays(1).AddSeconds(-1),
+                            BookingStatus = booking.Status
+                        }
+                      ).Where(x => x.BookingStatus == true && x.GuestNumber == guestNumber && x.GuestIdentification == guestIdentification
+                      ).ToListAsync();
+
+                if (bookings.Count() == 0)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "The user entered does not have any reservation in our system.",
+                        Result = bookings
+                    };
+                }
                 else
+                {
+
+                    return new Response
+                    {
+                        IsSuccess = true,
+                        Message = "Success",
+                        Result = bookings
+                    };
+                }
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = dbUpdateException.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
+        /// <summary>
+        /// Private methods to provide functionality and iteration with the database.
+        /// </summary>
+        private Response AddNewGuest(BookingViewModel guest)
+        {
+            Guest RegisteredGuest = _context.Guests.FirstOrDefault(x => x.Identification == guest.Guests.Identification ||
+            x.GuestEmail == guest.Guests.GuestEmail);
+
+            if (RegisteredGuest == null)
+            {
+                try
+                {
+                    RegisteredGuest = new Guest
+                    {
+                        Identification = guest.Guests.Identification,
+                        GuestName = guest.Guests.GuestName,
+                        GuestLastName = guest.Guests.GuestLastName,
+                        GuestEmail = guest.Guests.GuestEmail,
+                        GuestDateOfBirth = guest.Guests.GuestDateOfBirth,
+                        GuestStatus = true
+                    };
+
+                    _context.Guests.Add(RegisteredGuest);
+                    _context.SaveChanges();
+
+                    return new Response
+                    {
+                        IsSuccess = true,
+                        Message = "User created successfully.",
+                        Result = RegisteredGuest
+                    };
+                }
+                catch (DbUpdateException)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "An error has occurred, please try again, if the problem persists please contact customer service."
+                    };
+                }
+                catch (Exception)
                 {
                     return new Response
                     {
@@ -172,43 +336,20 @@ namespace CBookingProject.API.Repository {
                     };
                 }
             }
-        }
-
-
-
-        /// <summary>
-        /// Private methods to provide functionality and iteration with the database.
-        /// </summary>
-        private int AddNewGuest(BookingViewModel guest)
-        {
-            Guest RegisteredGuest = _context.Guests.FirstOrDefault(x => x.Identification == guest.Guests.Identification ||
-            x.GuestEmail == guest.Guests.GuestEmail);
-
-            if (RegisteredGuest == null)
+            else
             {
-                RegisteredGuest = new Guest
+                return new Response
                 {
-                    Identification = guest.Guests.Identification,
-                    GuestName = guest.Guests.GuestName,
-                    GuestLastName = guest.Guests.GuestLastName,
-                    GuestEmail = guest.Guests.GuestEmail,
-                    GuestDateOfBirth = guest.Guests.GuestDateOfBirth,
-                    GuestStatus = true
+                    IsSuccess = true,
+                    Message = "Reservation created successfully.",
+                    Result = RegisteredGuest
                 };
-
-                _context.Guests.Add(RegisteredGuest);
-                _context.SaveChanges();
-
-                return RegisteredGuest.GuestNumber;
-            }
-            else {
-                return RegisteredGuest.GuestNumber;
             }
         }
-        private int ValidateGuestNumber(BookingViewModel guest)
+        private int ValidateGuestNumber(string GuestIdentification, string GuestEmail)
         {
-            Guest RegisteredGuest = _context.Guests.FirstOrDefault(x => x.Identification == guest.Guests.Identification ||
-            x.GuestEmail == guest.Guests.GuestEmail);
+            Guest RegisteredGuest = _context.Guests.FirstOrDefault(x => x.Identification == GuestIdentification ||
+            x.GuestEmail == GuestEmail);
 
             if (RegisteredGuest == null)
             {
@@ -219,64 +360,68 @@ namespace CBookingProject.API.Repository {
                 return RegisteredGuest.GuestNumber;
             }
         }
-        private int AddNewBooking(BookingViewModel booking, int GuestId)
-        {
-                try
-                {
-
-                    Booking newbooking = new Booking
-                    {
-                        DateFrom = booking.Bookings.DateFrom,
-                        DateTo = booking.Bookings.DateTo,
-                        Status = true,
-                        BookingStatusId = 1,
-                        RoomId = booking.Bookings.RoomId,
-                        GuestId = GuestId,
-                        RoomAvailabilityId = booking.Bookings.RoomAvailabilityId,
-                    };
-
-                    _context.Bookings.Add(newbooking);
-                    _context.SaveChanges();
-
-                    return newbooking.BookingId;
-                }
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-                    {
-                        //ModelState.AddModelError(string.Empty, "Ya existe este Hotel");
-                    }
-                    else
-                    {
-                        //ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
-                    }
-                    return 0;
-                }
-                catch (Exception ex)
-                {
-                    return 0;
-                    //ModelState.AddModelError(string.Empty, ex.Message);
-                }
-
-        }
-        private Response SaveModifiedBooking(int BookingId,BookingViewModel booking, int GuestId)
+        private Response AddNewBooking(BookingViewModel booking, int GuestId)
         {
             try
             {
 
-                Booking modfiedBooking = _context.Bookings.Include(x=> x.Guests).FirstOrDefault(x => x.GuestId == GuestId &&
-                x.BookingId == BookingId && x.Status == true);
+                Booking newbooking = new Booking
+                {
+                    DateFrom = booking.Bookings.DateFrom,
+                    DateTo = booking.Bookings.DateTo.AddDays(1).AddSeconds(-1),
+                    Status = true,
+                    BookingStatusId = 1,
+                    RoomId = booking.Bookings.RoomId,
+                    GuestId = GuestId,
+                    RoomAvailabilityId = booking.Bookings.RoomAvailabilityId,
+                };
+
+                _context.Bookings.Add(newbooking);
+                _context.SaveChanges();
+
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = "Reservation created successfully.",
+                    Result = newbooking
+                };
+
+            }
+            catch (DbUpdateException)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = "An error has occurred, please try again, if the problem persists please contact customer service."
+                };
+            }
+            catch (Exception)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = "An error has occurred, please try again, if the problem persists please contact customer service."
+                };
+            }
+        }
+        private Response SaveModifiedBooking(int BookingId, BookingViewModel booking, int GuestId)
+        {
+            try
+            {
+
+                Booking modfiedBooking = _context.Bookings.Include(x => x.Guests).FirstOrDefault(x => x.GuestId == GuestId &&
+                 x.BookingId == BookingId && x.Status == true);
 
                 if (modfiedBooking != null)
                 {
 
                     modfiedBooking.DateFrom = booking.Bookings.DateFrom;
-                    modfiedBooking.DateTo = booking.Bookings.DateTo;
+                    modfiedBooking.DateTo = booking.Bookings.DateTo.AddDays(1).AddSeconds(-1);
                     modfiedBooking.Status = true;
                     modfiedBooking.BookingStatusId = 1;
                     modfiedBooking.RoomId = booking.Bookings.RoomId;
                     modfiedBooking.RoomAvailabilityId = booking.Bookings.RoomAvailabilityId;
-    
+
                     _context.Bookings.Update(modfiedBooking);
                     _context.SaveChanges();
 
@@ -288,7 +433,8 @@ namespace CBookingProject.API.Repository {
                     };
 
                 }
-                else {
+                else
+                {
                     return new Response
                     {
                         IsSuccess = false,
@@ -296,7 +442,7 @@ namespace CBookingProject.API.Repository {
                     };
                 }
             }
-            catch (DbUpdateException db)
+            catch (DbUpdateException)
             {
                 return new Response
                 {
@@ -304,7 +450,7 @@ namespace CBookingProject.API.Repository {
                     Message = "An error has occurred, please try again, if the problem persists please contact customer service."
                 };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new Response
                 {
@@ -314,7 +460,7 @@ namespace CBookingProject.API.Repository {
             }
 
         }
-        private Response SaveCancelBooking(int BookingId, BookingViewModel booking, int GuestId)
+        private Response SaveCancelBooking(int BookingId, BookingCancelParameters booking, int GuestId)
         {
             try
             {
@@ -345,7 +491,7 @@ namespace CBookingProject.API.Repository {
                     };
                 }
             }
-            catch (DbUpdateException db)
+            catch (DbUpdateException)
             {
                 return new Response
                 {
@@ -353,7 +499,7 @@ namespace CBookingProject.API.Repository {
                     Message = "An error has occurred, please try again, if the problem persists please contact customer service."
                 };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new Response
                 {

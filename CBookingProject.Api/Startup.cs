@@ -1,4 +1,3 @@
-using CBookingProject.API.Converters;
 using CBookingProject.API.Repository;
 using CBookingProject.API.Services;
 using CBookingProject.Data;
@@ -23,10 +22,13 @@ namespace CBookingProject.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions(options =>
+            /*services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new DateConverter());
-            });
+            });*/
+
+            services.AddControllers().AddNewtonsoftJson();
+            //services.AddControllers();
 
             services.AddDbContext<DataContext>(x =>
             {
@@ -60,7 +62,6 @@ namespace CBookingProject.API
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
