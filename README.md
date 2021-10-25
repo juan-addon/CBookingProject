@@ -82,6 +82,6 @@ The methods contained in the API are:
 
 # 🧾 Preview
 
-![image](https://user-images.githubusercontent.com/78773393/138624041-4634d1b0-3433-4ef6-87ef-36c829db8f50.png)
+![image](https://user-images.githubusercontent.com/78773393/138624847-093ef73f-1734-4462-8c0d-78a62a9ef4dd.png)
 
 Thanks for reading this description up to here.
