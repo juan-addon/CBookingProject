@@ -18,7 +18,19 @@ namespace CBookingProject.API.Repository
             _context = context;
             _availabilityService = availabilityService;
         }
-
+        /// <summary>
+        /// This method allows the web api to add a new reservation, it has the responsibility of verifying if the 
+        /// user who submits the reservation exists, if the method does not exist it will proceed to register the 
+        /// guest and then register the reservation, in case the guest already exists, the system will request 
+        /// the guest's id to assign it to the new reservation.
+        /// 
+        /// Inserts in this method are done through transactions.
+        /// </summary>
+        /// <returns>
+        /// An object of type Response which will indicate the result of the operation and the arrangement 
+        /// of the processed information, in case of error it only returns the status of the transaction and the error
+        /// message.
+        /// </returns>
         public async Task<Response> AddNewBookingWithGuest(BookingViewModel bookingViewModel)
         {
             using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = _context.Database.BeginTransaction())
@@ -97,6 +109,20 @@ namespace CBookingProject.API.Repository
                 }
             }
         }
+        /// <summary>
+        /// This method allows the web api to modify reservation, it has the responsibility of verifying if the 
+        /// user who submits the request is the owner of the reservation, 
+        /// If the user is not the owner of the reservation, the system will not process the request, 
+        /// if the user is the owner of the request, the method will communicate with the availability 
+        /// check method to verify if there is availability in the modification of the reservation.
+        /// 
+        /// All Request in this method are done through transactions.
+        /// </summary>
+        /// <returns>
+        /// An object of type Response which will indicate the result of the operation and the arrangement 
+        /// of the processed information, in case of error it only returns the status of the transaction and the error
+        /// message.
+        /// </returns>
         public async Task<Response> ModifyBooking(int BookingId, BookingViewModel bookingViewModel)
         {
             using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = _context.Database.BeginTransaction())
@@ -169,6 +195,19 @@ namespace CBookingProject.API.Repository
                 }
             }
         }
+        /// <summary>
+        /// This method allows the web api to cancel a reservation, it has the responsibility of verifying if the 
+        /// user who submits the request is the owner of the reservation, 
+        /// If the user is not the owner of the reservation, the method will not process the request, 
+        /// if the user is the owner of the request, the method will Cancel the reservation
+        /// 
+        /// All Request in this method are done through transactions.
+        /// </summary>
+        /// <returns>
+        /// An object of type Response which will indicate the result of the operation and the arrangement 
+        /// of the processed information, in case of error it only returns the status of the transaction and the error
+        /// message.
+        /// </returns>
         public async Task<Response> CancelBooking(int BookingId, BookingCancelParameters bookingCancelViewModel)
         {
             using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = _context.Database.BeginTransaction())
@@ -227,6 +266,14 @@ namespace CBookingProject.API.Repository
                 }
             }
         }
+        /// <summary>
+        /// This method allows users to check active reservations at the hotel 
+        /// </summary>
+        /// <returns>
+        /// An object of type Response which will indicate the result of the operation and the arrangement 
+        /// of the processed information, in case of error it only returns the status of the transaction and the error
+        /// message.
+        /// </returns>
         public async Task<Response> GetBookingsByGuestNumber(int guestNumber, string guestIdentification)
         {
             try

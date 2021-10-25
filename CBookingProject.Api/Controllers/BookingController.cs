@@ -173,6 +173,11 @@ namespace CBookingProject.API.Controllers.API
             return Ok(result.Result);
         }
 
+
+        /// <summary>
+        /// Private methods to provide functionality and iteration dates fields
+        /// </summary>
+        /// 
         private bool IsDateTime(string date) {
 
             DateTime dateConverted;

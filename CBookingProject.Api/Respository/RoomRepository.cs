@@ -17,6 +17,24 @@ namespace CBookingProject.API.Repository
         {
             _context = context;
         }
+
+        /// <summary>
+        /// This method provides the functionality to verify the availability of rooms in the hotel according to the 
+        /// following requirements:
+        ///Verify that the number of rooms reserved is less than the number of rooms available for a given date, 
+        ///if the number of reservations is equal to the number of available rooms, the system blocks those records
+        ///and does not allow inserting more reservations.
+        ///
+        ///This method also validates the minimum dates of reservations before accommodation and the maximum dates 
+        ///allowed for reservations, as well as the maximum days allowed in the rooms.
+        ///
+        ///If the search request is not among the aforementioned parameters then the system shows the availability
+        /// </summary>
+        /// <returns>
+        /// An object of type Response which will indicate the result of the operation and the arrangement 
+        /// of the processed information, in case of error it only returns the status of the transaction and the error
+        /// message.
+        /// </returns>
         public async Task<Response> CheckAvailabilityInDate(DateTime FromDate, DateTime DateTo)
         {
             TimeSpan Diff_dates = FromDate.Date.Subtract(DateTime.Now.Date);

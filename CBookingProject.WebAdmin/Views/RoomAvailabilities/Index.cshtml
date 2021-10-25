@@ -34,17 +34,10 @@
                                 @Html.DisplayNameFor(model => model.DateTo)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.MinimumAdvanceReservation)
+                                Advance reservation (Min - Max)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.MaximumAdvanceReservatio)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.MaxDayAllowed)
-                            </th>
-
-                            <th>
-                                @Html.DisplayNameFor(model => model.Status)
+                                Allowed Days
                             </th>
                             <th></th>
                         </tr>
@@ -66,19 +59,13 @@
                                 @Html.DisplayFor(modelItem => item.DateTo)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.MinimumAdvanceReservation)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MaximumAdvanceReservatio)
+                                @Html.DisplayFor(modelItem => item.MinimumAdvanceReservation) - @Html.DisplayFor(modelItem => item.MaximumAdvanceReservatio)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.MaxDayAllowed)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            <td>
-                                <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.AvailabilityId">Edit</a> |
+                                <a asp-action="Edit" class="btn btn-success" asp-route-id="@item.AvailabilityId">Edit</a> |
                                 <button data-id="@item.AvailabilityId" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
                             </td>
                         </tr>
