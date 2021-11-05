@@ -84,4 +84,11 @@ The methods contained in the API are:
 
 ![image](https://user-images.githubusercontent.com/78773393/138624847-093ef73f-1734-4462-8c0d-78a62a9ef4dd.png)
 
+
+DEMO:  
+
+Administration page: https://bookingprojectadmin.azurewebsites.net/
+
+API: https://cbookingprojectapi.azurewebsites.net/index.html
+
 Thanks for reading this description up to here.
